@@ -2,6 +2,9 @@
 .include "nominal.jsim"
 .include "stdcell.jsim"
 
+************************************************
+* Full-adder subckt
+************************************************
 .subckt fa A B C SUM COUT
     xNAB A B nab nand2
     xNAC A C nac nand2 
@@ -15,21 +18,22 @@
     xNcnanb C na nb Ncnanb nand3 
     xSum Nabc Nanbnc Nbnanc Ncnanb SUM nand4
     xCout nab nac nbc COUT nand3
-.ends 
-
-.subckt add32 a[31:0] b[31:0] c_in0 sum[31:0] c_out[31:30]
-    XaddBits a b c_in0 sum c_out fa
 .ends
 
-Xsum a[31:0] b[31:0] 0 sum[31:0] c31 c30 add32
+.subckt add32 a[31:0] b[31:0] c_in0 sum[31:0] c_out[31:30]
+    xMine a[31:0] b[31:0] c_out[30:0] c_in0 sum[31:0] c_out[31:0] fa
+.ends
+
+XSum a[31:0] b[31:0] 0 sum[31:0] c31 c30 add32
 
 Wa a[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
-+ 0 1 2 6 7 -8 -7 -3 -2 -1
-
++ 0x00000000 0x55555555 0x00000000 0x55555555 0xFFFFFFFF 0xAAAAAAAA 0x00000000 0xAAAAAAAA 0x00000001 0xFFFFFFFF
 Wb b[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
-+ 0 1 2 6 7 -8 -7 -3 -2 -1
++ 0x00000000 0x00000000 0x55555555 0x55555555 0xFFFFFFFF 0x00000000 0xAAAAAAAA 0xAAAAAAAA 0xFFFFFFFF 0x00000001
 
-.tran 40ns
+.tran 200ns
 .plot a[31:0]
 .plot b[31:0]
 .plot sum[31:0]
+
+
