@@ -18,6 +18,7 @@
 .ends 
 
 .subckt add32 a[31:0] b[31:0] c_in0 sum[31:0] c_out[31:30]
+    XaddBits a b c_in0 sum c_out fa
 .ends
 
 Xsum a[31:0] b[31:0] 0 sum[31:0] c31 c30 add32
@@ -28,7 +29,7 @@ Wa a[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
 Wb b[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
 + 0 1 2 6 7 -8 -7 -3 -2 -1
 
-.tran 10ns
+.tran 40ns
 .plot a[31:0]
 .plot b[31:0]
 .plot sum[31:0]
