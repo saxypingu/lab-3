@@ -1,0 +1,34 @@
+.include "8clocks.jsim"
+.include "nominal.jsim"
+.include "stdcell.jsim"
+
+.subckt fa A B C SUM COUT
+    xNAB A B nab nand2
+    xNAC A C nac nand2 
+    xNBC B C nbc nand2
+    xNA A na inverter
+    xNB B nb inverter 
+    xNC C nc inverter 
+    xNabc A B C Nabc nand3
+    xNanbnc A nb nc Nanbnc nand3 
+    xNbnanc B na nc Nbnanc nand3
+    xNcnanb C na nb Ncnanb nand3 
+    xSum Nabc Nanbnc Nbnanc Ncnanb SUM nand4
+    xCout nab nac nbc COUT nand3
+.ends 
+
+.subckt add32 a[31:0] b[31:0] c_in0 sum[31:0] c_out[31:30]
+.ends
+
+Xsum a[31:0] b[31:0] 0 sum[31:0] c31 c30 add32
+
+Wa a[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
++ 0 1 2 6 7 -8 -7 -3 -2 -1
+
+Wb b[31:0] nrz(0, 5, 20ns, 0ns, 0.001ns, 0.001ns)
++ 0 1 2 6 7 -8 -7 -3 -2 -1
+
+.tran 10ns
+.plot a[31:0]
+.plot b[31:0]
+.plot sum[31:0]
